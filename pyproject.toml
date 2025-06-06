@@ -1,0 +1,81 @@
+[tool.poetry]
+name = "ldp_group_mean"
+version = "0.1.0"
+description = "Locally Differentially Private Comparison of Groups in Decentralized Health Data"
+authors = ["René Raab <rene.raab@fau.de>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pandas = "^2.0.0"
+openpyxl = "^3.1.2"
+scipy = "^1.10.1"
+seaborn = "^0.13.2"
+sok-ldp-analysis = {git = "https://github.com/mad-lab-fau/sok-ldp-data-analysis.git"}
+
+mpi4py = { version = "^4.0.0", optional = true }
+optuna = "^4.1.0"
+icd-mappings = {git = "https://github.com/reneraab/ICD-Mappings.git", branch = "patch-1" }
+matplotlib = "^3.9.0"
+jinja2 = "^3.1.6"
+
+[tool.poetry.extras]
+mpi = ["mpi4py"]
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+poethepoet = "^0.19.0"
+pytest = "^7.3.1"
+pytest-cov = "^4.0.0"
+ipykernel = "^6.22.0"
+ruff = "^0.7.2"
+ipympl = "^0.9.3"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | docs
+    | build
+    | dist
+    | \.virtual_documents
+  )/
+)
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120
+skip_gitignore = true
+
+
+
+[tool.poe.tasks]
+_format_black = "black ."
+_format_ruff = "ruff check --fix-only --exit-zero ."
+format = ["_format_black", "_format_ruff", "_format_black"]
+lint = { cmd = "ruff check ldp_group_mean --fix", help = "Lint all files with ruff." }
+_lint_ci = "ruff check --output-format=github ldp_group_mean"
+_check_black = "black . --check"
+ci_check = { sequence = ["_check_black", "_lint_ci"], help = "Check all potential format and linting issues." }
+test = { cmd = "pytest --cov=ldp_group_mean --cov-report=term-missing --cov-report=xml", help = "Run Pytest with coverage." }
+version = { script = "_tasks:task_update_version()" }
+conf_jupyter = { cmd = "python -m ipykernel install --user --name ldp_group_mean", help = "Add a new jupyter kernel for the project." }
+
+remove_jupyter = { cmd = "jupyter kernelspec uninstall ldp_group_mean", help = "Remove the project specific jupyter kernel."}
+experiment = { script = "_tasks:task_new_experiment()", help = "Create the boilerplate for a new experiment in the experiment subfolder."}
