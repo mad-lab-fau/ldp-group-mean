@@ -49,12 +49,10 @@ To reproduce the plots from the paper, you need a LaTeX installation on your sys
 minimally required (example for Ubuntu / artifact evaluation VM):
 
 ```
-sudo apt install texlive-latex-recommended cm-super texlive-science texlive-fonts-extra
+sudo apt install texlive-latex-recommended cm-super texlive-science texlive-fonts-extra dvipng
 ```
 
-On some systems, a manual installation of `dvipng` may be necessary to generate the plots. You can either install it
-via your system package manager (e.g., `sudo apt install dvipng`) or if you have `tlmgr` installed
-as `sudo tlmgr install dvipng`.
+If you are using a different Linux distribution, you need to install the equivalent packages for your distribution. 
 
 ### Estimated Time and Storage Consumption
 These estimates are based on a rather old laptop with 4 cores (Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz) and 16 GB of RAM.
